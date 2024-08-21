@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useCookies } from "react-cookie";
 function MovieDetails(props) {
   const [highlighted, setHighLighted] = useState(-1);
   const highLightRate = (high) => (event) => {
     setHighLighted(high);
   };
+  const [token] = useCookies(["mr-token"]);
   const rateClicked = (rate) => (event) => {
     fetch(`http://127.0.0.1:8000/api/movies/${props.movie.id}/rate_movie/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token 264b3755062a0f078bc9bc3937418fe8377e61f7",
+        Authorization: `Token ${token["mr-token"]}`,
       },
       body: JSON.stringify({ stars: rate + 1 }),
     })
@@ -23,7 +25,7 @@ function MovieDetails(props) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Token 264b3755062a0f078bc9bc3937418fe8377e61f7",
+        Authorization: `Token ${token["mr-token"]}`,
       },
     })
       .then((resp) => resp.json())
